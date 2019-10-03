@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'kennywoodapi',
+    'bangazonapi',
 ]
 
 REST_FRAMEWORK = {
@@ -70,7 +70,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000'
 )
 
-ROOT_URLCONF = 'kennywood.urls'
+ROOT_URLCONF = 'bangazonapi.urls'
 
 TEMPLATES = [
     {
@@ -88,7 +88,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'kennywood.wsgi.application'
+WSGI_APPLICATION = 'bangazonapi.wsgi.application'
 
 
 # Database
