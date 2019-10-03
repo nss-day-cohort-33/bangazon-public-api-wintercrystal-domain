@@ -1,17 +1,13 @@
 from django.db import models
-from .customer import Customer
-from .attraction import Attraction
+from .order import Order
+from .product import Product
 
-class Itinerary(models.Model):
+class OrderProduct(models.Model):
 
-    attraction = models.ForeignKey(Attraction, on_delete=models.DO_NOTHING)
-    customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING)
-    starttime = models.IntegerField()
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING,)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING,)
+    quantity = models.IntegerField()
 
     class Meta:
-        verbose_name = ("itinerary")
-        verbose_name_plural = ("itineraries")
-
-    def __str__(self):
-        return f'Riding {self.attraction.name} at {self.starttime}'
-
+        verbose_name = ("orderproduct")
+        verbose_name_plural = ("orderproducts")

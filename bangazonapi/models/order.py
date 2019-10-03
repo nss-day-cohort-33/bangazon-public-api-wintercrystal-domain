@@ -1,16 +1,16 @@
 """Module for for Park Areas"""
 from django.db import models
+from .customer import Customer
+from .payment import Payment
 
 
-class ParkArea(models.Model):
-    """Model class for ParkArea"""
-    name = models.CharField(max_length=50)
-    theme = models.CharField(max_length=50)
+class Order(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING,)
+    payment_type = models.ForeignKey(Payment, on_delete=models.DO_NOTHING,)
+    created_date = models.DateField(default="0000-00-00",)
+
+
 
     class Meta:
-        verbose_name = ("parkarea")
-        verbose_name_plural = ("parkareas")
-
-    def __str__(self):
-        return self.name
-
+        verbose_name = ("order")
+        verbose_name_plural = ("orders")
