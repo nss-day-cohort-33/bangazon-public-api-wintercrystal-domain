@@ -4,6 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
+from 
 
 
 
@@ -22,7 +23,7 @@ class orderSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     class Meta:
-        model = ParkArea
+        model = Order
         url = serializers.HyperlinkedIdentityField(
             view_name='parkarea',
             lookup_field='id'
