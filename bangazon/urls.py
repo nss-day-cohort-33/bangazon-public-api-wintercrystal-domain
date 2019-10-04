@@ -2,19 +2,17 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from bangazonapi.models import *
-from bangazonapi.views import *
 from bangazonapi.views import register_user, login_user
+from bangazonapi.views import *
 
 # pylint: disable=invalid-name
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'order', Orders, 'order')
-router.register(r'payment_type', Payments, 'payment')
-
-
-# pylint: disable=invalid-name
-
+router.register(r'productcategories', ProductCategories, 'productcategory')
+router.register(r'orderproducts', OrderProducts, 'orderproduct')
 router.register(r'customers', Customers, 'customer')
 router.register(r'users', Users, 'user')
+router.register(r'order', Orders, 'order')
+router.register(r'payment_type', Payments, 'payment')
 
 
 # Wire up our API using automatic URL routing.
