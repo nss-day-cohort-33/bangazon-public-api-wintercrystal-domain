@@ -1,0 +1,32 @@
+[
+    {
+        "model": "bangazonapi.product",
+        "pk": 1,
+        "fields": {
+            "name": "Big Monitor",
+            "customer_id": "1",
+            "price": "499.99",
+            "description": "It's a big monitor. You will be able to watch things bigly on it.",
+            "quantity": "100",
+            "created_date": "2019-03-24",
+            "product_category_id": "3",
+            "location": "Nashville",
+            "image_id": "1"
+        }
+    },
+    {
+        "model": "bangazonapi.product",
+        "pk": 2,
+        "fields": {
+            "name": "Small Monitor",
+            "customer_id": "2",
+            "price": "199.99",
+            "description": "It's a small monitor. You will no be able to watch things bigly on it.",
+            "quantity": "100",
+            "created_date": "2019-04-24",
+            "product_category_id": "3",
+            "location": "Nashville",
+            "image_id": "1"
+        }
+    }
+]
