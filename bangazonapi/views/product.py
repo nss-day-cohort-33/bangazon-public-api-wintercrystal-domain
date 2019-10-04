@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Product
+from bangazonapi.models import Customer
+from bangazonapi.models import Image
+from bangazonapi.models import ProductCategory
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,7 +22,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='product',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'area')
+        fields = ('id', 'url', 'name', 'price', 'description', 'quantity', 'created_date', 'location', 'customer', 'image', 'product_category')
+        # depth = 2
 
 
 class Products(ViewSet):
@@ -33,12 +37,24 @@ class Products(ViewSet):
         """
         new_product = Product()
         new_product.name = request.data["name"]
+        new_product.price = request.data["price"]
+        new_product.description = request.data["description"]
+        new_product.quantity = request.data["quantity"]
+        new_product.created_date = request.data["created_date"]
+        new_product.location = request.data["location"]
 
-        area = ParkArea.objects.get(pk=request.data["area_id"])
-        new_attraction.area = area
-        new_attraction.save()
+        customer = Customer.objects.get(user=request.auth.user)
+        new_product.customer = customer
 
-        serializer = AttractionSerializer(new_attraction, context={'request': request})
+        image = Image.objects.get(pk=request.data["image_id"])
+        new_product.image = image
+
+        product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
+        new_product.product_category = product_category
+
+        new_product.save()
+
+        serializer = ProductSerializer(new_product, context={'request': request})
 
         return Response(serializer.data)
 
@@ -49,8 +65,8 @@ class Products(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            area = Attraction.objects.get(pk=pk)
-            serializer = AttractionSerializer(area, context={'request': request})
+            product = Product.objects.get(pk=pk)
+            serializer = ProductSerializer(product, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -61,11 +77,23 @@ class Products(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        attraction = Attraction.objects.get(pk=pk)
-        area = ParkArea.objects.get(pk=request.data["area_id"])
-        attraction.name = request.data["name"]
-        attraction.area = area
-        attraction.save()
+        product = Product.objects.get(pk=pk)
+        product.name = request.data["name"]
+        product.price = request.data["price"]
+        product.description = request.data["description"]
+        product.quantity = request.data["quantity"]
+        product.created_date = request.data["created_date"]
+        product.location = request.data["location"]
+
+        customer = Customer.objects.get(user=request.auth.user)
+        product.customer = customer
+
+        image = Image.objects.get(pk=request.data["image_id"])
+        product.image = image
+
+        product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
+        product.product_category = product_category
+        product.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -76,12 +104,12 @@ class Products(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            area = Attraction.objects.get(pk=pk)
-            area.delete()
+            product = Product.objects.get(pk=pk)
+            product.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-        except Attraction.DoesNotExist as ex:
+        except Product.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
@@ -93,13 +121,13 @@ class Products(ViewSet):
         Returns:
             Response -- JSON serialized list of park attractions
         """
-        attractions = Attraction.objects.all()
+        products = Product.objects.all()
 
         # Support filtering attractions by area id
-        area = self.request.query_params.get('area', None)
-        if area is not None:
-            attractions = attractions.filter(area__id=area)
+        # area = self.request.query_params.get('area', None)
+        # if area is not None:
+        #     attractions = attractions.filter(area__id=area)
 
-        serializer = AttractionSerializer(
-            attractions, many=True, context={'request': request})
+        serializer = ProductSerializer(
+            products, many=True, context={'request': request})
         return Response(serializer.data)
