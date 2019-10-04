@@ -9,3 +9,5 @@ obj
 .vscode
 dist
 bangazon-api-env
+migrations
+
