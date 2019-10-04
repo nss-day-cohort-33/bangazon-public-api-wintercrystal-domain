@@ -4,33 +4,30 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from bangazonapi.models import Product
-from bangazonapi.models import Customer
 from bangazonapi.models import Image
-from bangazonapi.models import ProductCategory
 
 # Author: Danny Barker
 # Purpose: Allow a user to communicate with the Bangazon database to GET PUT
 # POST and DELETE entries.
 # Methods: GET PUT(id) POST DELETE
 
-class ProductSerializer(serializers.HyperlinkedModelSerializer):
+class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for park areas
 
     Arguments:
         serializers
     """
     class Meta:
-        model = Product
+        model = Image
         url = serializers.HyperlinkedIdentityField(
-            view_name='product',
+            view_name='image',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'price', 'description', 'quantity', 'created_date', 'location', 'customer', 'image', 'product_category')
-        depth = 2
+        fields = ('id', 'url', 'product_pic',)
+        # depth = 2
 
 
-class Products(ViewSet):
+class Images(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
 
     def create(self, request):
@@ -39,26 +36,12 @@ class Products(ViewSet):
         Returns:
             Response -- JSON serialized Product instance
         """
-        new_product = Product()
-        new_product.name = request.data["name"]
-        new_product.price = request.data["price"]
-        new_product.description = request.data["description"]
-        new_product.quantity = request.data["quantity"]
-        new_product.created_date = request.data["created_date"]
-        new_product.location = request.data["location"]
+        new_image = Image()
+        new_image.product_pic = request.data["product_pic"]
 
-        customer = Customer.objects.get(user=request.auth.user)
-        new_product.customer = customer
+        new_image.save()
 
-        image = Image.objects.get(pk=request.data["image_id"])
-        new_product.image = image
-
-        product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
-        new_product.product_category = product_category
-
-        new_product.save()
-
-        serializer = ProductSerializer(new_product, context={'request': request})
+        serializer = ImageSerializer(new_image, context={'request': request})
 
         return Response(serializer.data)
 
@@ -69,8 +52,8 @@ class Products(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            product = Product.objects.get(pk=pk)
-            serializer = ProductSerializer(product, context={'request': request})
+            image = Image.objects.get(pk=pk)
+            serializer = ImageSerializer(image, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -81,23 +64,9 @@ class Products(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        product = Product.objects.get(pk=pk)
-        product.name = request.data["name"]
-        product.price = request.data["price"]
-        product.description = request.data["description"]
-        product.quantity = request.data["quantity"]
-        product.created_date = request.data["created_date"]
-        product.location = request.data["location"]
-
-        customer = Customer.objects.get(user=request.auth.user)
-        product.customer = customer
-
-        image = Image.objects.get(pk=request.data["image_id"])
-        product.image = image
-
-        product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
-        product.product_category = product_category
-        product.save()
+        image = Image.objects.get(pk=pk)
+        image.product_pic = request.data["product_pic"]
+        image.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -108,12 +77,12 @@ class Products(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            product = Product.objects.get(pk=pk)
-            product.delete()
+            image = Image.objects.get(pk=pk)
+            image.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-        except Product.DoesNotExist as ex:
+        except Image.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
@@ -125,13 +94,13 @@ class Products(ViewSet):
         Returns:
             Response -- JSON serialized list of park attractions
         """
-        products = Product.objects.all()
+        images = Image.objects.all()
 
         # Support filtering attractions by area id
         # area = self.request.query_params.get('area', None)
         # if area is not None:
         #     attractions = attractions.filter(area__id=area)
 
-        serializer = ProductSerializer(
-            products, many=True, context={'request': request})
+        serializer = ImageSerializer(
+            images, many=True, context={'request': request})
         return Response(serializer.data)
