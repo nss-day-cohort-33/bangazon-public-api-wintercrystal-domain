@@ -1,3 +1,9 @@
+"""
+   Author: Daniel Krusch
+   Purpose: To convert order products data to json
+   Methods: GET, DELETE, POST
+"""
+
 """View module for handling requests about park areas"""
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
@@ -32,10 +38,10 @@ class OrderProducts(ViewSet):
             Response -- JSON serialized product category instance
         """
         new_order_product = OrderProduct()
-        # new_order_product.order = Order.objects.get(pk=request.data["order_id"])
-        # new_order_product.product = Product.objects.get(pk=request.data["product_id"])
-        new_order_product.order = request.data["order_id"]
-        new_order_product.product = request.data["product_id"]
+        new_order_product.order = Order.objects.get(pk=request.data["order_id"])
+        new_order_product.product = Product.objects.get(pk=request.data["product_id"])
+        # new_order_product.order = request.data["order_id"]
+        # new_order_product.product = request.data["product_id"]
         new_order_product.quantity = request.data["quantity"]
         new_order_product.save()
 

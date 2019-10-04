@@ -1,3 +1,9 @@
+"""
+   Author: Daniel Krusch
+   Purpose: To convert product category data to json
+   Methods: GET, POST
+"""
+
 """View module for handling requests about park areas"""
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
