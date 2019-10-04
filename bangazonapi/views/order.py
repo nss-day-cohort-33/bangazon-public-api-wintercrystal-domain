@@ -4,34 +4,29 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
+from bangazonapi.models import Order, Payment, Customer
 
 
 
-class orderSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for park areas
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for order
 
     Arguments:
         serializers
     """
-    attractions = serializers.HyperlinkedRelatedField(
-        queryset=Attraction.objects.all(),
-        view_name="attraction-detail",
-        many=True,
-        required=False,
-        lookup_field="pk"
-    )
+
 
     class Meta:
-        model = ParkArea
+        model = Order
         url = serializers.HyperlinkedIdentityField(
             view_name='parkarea',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'theme', 'attractions')
+        fields = ('id', 'url', 'payment_type', 'created_date')
         depth = 1
 
 
-class ParkAreas(ViewSet):
+class Orders(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
 
     def create(self, request):
@@ -40,12 +35,13 @@ class ParkAreas(ViewSet):
         Returns:
             Response -- JSON serialized ParkArea instance
         """
-        newarea = ParkArea()
-        newarea.name = request.data["name"]
-        newarea.theme = request.data["theme"]
-        newarea.save()
+        neworder = Order()
+        neworder.created_date = request.data["created_date"]
+        customer = Customer.objects.get(user=request.auth.user)
+        neworder.customer = customer
+        neworder.save()
 
-        serializer = ParkAreaSerializer(newarea, context={'request': request})
+        serializer = OrderSerializer(neworder, context={'request': request})
 
         return Response(serializer.data)
 
@@ -56,8 +52,8 @@ class ParkAreas(ViewSet):
             Response -- JSON serialized park area instance
         """
         try:
-            area = ParkArea.objects.get(pk=pk)
-            serializer = ParkAreaSerializer(area, context={'request': request})
+            order = Order.objects.get(pk=pk)
+            serializer = OrderSerializer(order, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -68,10 +64,9 @@ class ParkAreas(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        area = ParkArea.objects.get(pk=pk)
-        area.name = request.data["name"]
-        area.theme = request.data["theme"]
-        area.save()
+        order = Order.objects.get(pk=pk)
+        order.payment_type = request.data["payment_type"]
+        order.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -82,12 +77,12 @@ class ParkAreas(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            area = ParkArea.objects.get(pk=pk)
-            area.delete()
+            order = Order.objects.get(pk=pk)
+            order.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-        except ParkArea.DoesNotExist as ex:
+        except Order.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
@@ -99,7 +94,7 @@ class ParkAreas(ViewSet):
         Returns:
             Response -- JSON serialized list of park areas
         """
-        areas = ParkArea.objects.all()
-        serializer = ParkAreaSerializer(
-            areas, many=True, context={'request': request})
+        orders = Order.objects.all()
+        serializer = OrderSerializer(
+            orders, many=True, context={'request': request})
         return Response(serializer.data)
