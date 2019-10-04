@@ -4,35 +4,35 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from kennywoodapi.models import Attraction, ParkArea
+from bangazonapi.models import Product
 
 
-class AttractionSerializer(serializers.HyperlinkedModelSerializer):
+class ProductSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for park areas
 
     Arguments:
         serializers
     """
     class Meta:
-        model = Attraction
+        model = Product
         url = serializers.HyperlinkedIdentityField(
-            view_name='attraction',
+            view_name='product',
             lookup_field='id'
         )
         fields = ('id', 'url', 'name', 'area')
 
 
-class Attractions(ViewSet):
+class Products(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
 
     def create(self, request):
         """Handle POST operations
 
         Returns:
-            Response -- JSON serialized Attraction instance
+            Response -- JSON serialized Product instance
         """
-        new_attraction = Attraction()
-        new_attraction.name = request.data["name"]
+        new_product = Product()
+        new_product.name = request.data["name"]
 
         area = ParkArea.objects.get(pk=request.data["area_id"])
         new_attraction.area = area
