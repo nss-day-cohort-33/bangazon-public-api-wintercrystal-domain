@@ -8,6 +8,11 @@ from bangazonapi.views import *
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'products', Products, 'product')
 router.register(r'images', Images, 'image')
+router.register(r'productcategories', ProductCategories, 'productcategory')
+router.register(r'orderproducts', OrderProducts, 'orderproduct')
+router.register(r'customers', Customers, 'customer')
+router.register(r'users', Users, 'user')
+
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

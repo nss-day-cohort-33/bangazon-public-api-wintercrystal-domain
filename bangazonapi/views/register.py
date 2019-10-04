@@ -59,7 +59,8 @@ def register_user(request):
     )
 
     customer = Customer.objects.create(
-        family_members=req_body['family_members'],
+        phone_number=req_body['phone_number'],
+        address=req_body['address'],
         user=new_user
     )
 
