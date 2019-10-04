@@ -11,6 +11,12 @@ router.register(r'order', Orders, 'order')
 router.register(r'payment_type', Payments, 'payment')
 
 
+# pylint: disable=invalid-name
+
+router.register(r'customers', Customers, 'customer')
+router.register(r'users', Users, 'user')
+
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
