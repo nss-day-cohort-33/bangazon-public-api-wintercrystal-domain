@@ -6,7 +6,11 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Order, Payment, Customer
 
-
+'''
+auther: Tyler Carpenter
+purpose: Allow a user to communicate with the Bangazon database to GET PUT POST and DELETE entries.
+methods: all
+'''
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for order
@@ -19,10 +23,10 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order
         url = serializers.HyperlinkedIdentityField(
-            view_name='parkarea',
+            view_name='order',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'payment_type', 'created_date')
+        fields = ('id', 'url', 'created_date', 'payment_type')
         depth = 1
 
 
@@ -46,10 +50,10 @@ class Orders(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        """Handle GET requests for single park area
+        """Handle GET requests for order
 
         Returns:
-            Response -- JSON serialized park area instance
+            Response -- JSON serialized order
         """
         try:
             order = Order.objects.get(pk=pk)

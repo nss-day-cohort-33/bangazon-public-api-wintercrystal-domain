@@ -6,6 +6,12 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Payment, Customer
 
+'''
+auther: Tyler Carpenter
+purpose: Allow a user to communicate with the Bangazon database to GET PUT POST and DELETE entries.
+methods: all
+'''
+
 
 class PaymentSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for Payment
@@ -19,7 +25,7 @@ class PaymentSerializer(serializers.HyperlinkedModelSerializer):
             view_name='payment',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'merchant_name', 'account_name', 'expiration_date', 'create_date')
+        fields = ('id', 'url', 'merchant_name', 'account_number', 'expiration_date', 'create_date')
 
 
 class Payments(ViewSet):
@@ -35,7 +41,7 @@ class Payments(ViewSet):
         new_payment.merchant_name = request.data["merchant_name"]
         new_payment.account_number = request.data["account_number"]
         new_payment.expiration_date = request.data["expiration_date"]
-        new_payment.create_date = request.data["create_data"]
+        new_payment.create_date = request.data["create_date"]
         customer = Customer.objects.get(user=request.auth.user)
         new_payment.customer = customer
         new_payment.save()
