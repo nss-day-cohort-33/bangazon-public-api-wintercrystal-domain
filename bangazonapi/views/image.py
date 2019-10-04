@@ -6,6 +6,11 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Image
 
+# Author: Danny Barker
+# Purpose: Allow a user to communicate with the Bangazon database to GET PUT
+# POST and DELETE entries.
+# Methods: GET PUT(id) POST DELETE
+
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for park areas
 

@@ -9,6 +9,10 @@ from bangazonapi.models import Customer
 from bangazonapi.models import Image
 from bangazonapi.models import ProductCategory
 
+# Author: Danny Barker
+# Purpose: Allow a user to communicate with the Bangazon database to GET PUT
+# POST and DELETE entries.
+# Methods: GET PUT(id) POST DELETE
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for park areas
