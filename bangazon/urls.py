@@ -12,6 +12,8 @@ router.register(r'productcategories', ProductCategories, 'productcategory')
 router.register(r'orderproducts', OrderProducts, 'orderproduct')
 router.register(r'customers', Customers, 'customer')
 router.register(r'users', Users, 'user')
+router.register(r'orders', Orders, 'order')
+router.register(r'paymenttypes', Payments, 'payment')
 
 
 # Wire up our API using automatic URL routing.

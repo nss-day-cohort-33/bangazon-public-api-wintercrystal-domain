@@ -70,7 +70,7 @@ class OrderProducts(ViewSet):
         """
         new_order_product = OrderProduct.objects.get(pk=pk)
         new_order_product.quantity = request.data["quantity"]
-        ItineraryItems.save()
+        new_order_product.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -86,7 +86,7 @@ class OrderProducts(ViewSet):
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-        except ItineraryItems.DoesNotExist as ex:
+        except order_product.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
