@@ -64,23 +64,23 @@ class Payments(ViewSet):
             return HttpResponseServerError(ex)
 
 
-    # def destroy(self, request, pk=None):
-    #     """Handle DELETE requests for a single park are
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single park are
 
-    #     Returns:
-    #         Response -- 200, 404, or 500 status code
-    #     """
-    #     try:
-    #         area = Attraction.objects.get(pk=pk)
-    #         area.delete()
+        Returns:
+            Response -- 200, 404, or 500 status code
+        """
+        try:
+            payment = Payment.objects.get(pk=pk)
+            payment.delete()
 
-    #         return Response({}, status=status.HTTP_204_NO_CONTENT)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-    #     except Attraction.DoesNotExist as ex:
-    #         return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        except Payment.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
-    #     except Exception as ex:
-    #         return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
         """Handle GET requests to park attractions resource

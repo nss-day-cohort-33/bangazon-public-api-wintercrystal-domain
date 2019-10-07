@@ -3,6 +3,7 @@
         "model": "bangazonapi.payment",
         "pk": 1,
         "fields": {
+            "deleted": "",
             "merchant_name": "Visa",
             "account_number": "24ijio68948fj8439",
             "customer_id": "1",
@@ -14,6 +15,7 @@
         "model": "bangazonapi.payment",
         "pk": 2,
         "fields": {
+            "deleted": "",
             "merchant_name": "Mastercard",
             "account_number": "39j3984fj9sofi9",
             "customer_id": "2",
@@ -25,6 +27,7 @@
         "model": "bangazonapi.payment",
         "pk": 3,
         "fields": {
+            "deleted": "",
             "merchant_name": "Visa",
             "account_number": "fj0398fjw0g89434",
             "customer_id": "3",

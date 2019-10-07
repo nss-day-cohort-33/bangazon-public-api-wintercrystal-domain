@@ -3,6 +3,7 @@
         "model": "bangazonapi.product",
         "pk": 1,
         "fields": {
+            "deleted": "",
             "name": "Big Monitor",
             "customer_id": "1",
             "price": "499.99",
@@ -18,6 +19,7 @@
         "model": "bangazonapi.product",
         "pk": 2,
         "fields": {
+            "deleted": "",
             "name": "Small Monitor",
             "customer_id": "2",
             "price": "199.99",
