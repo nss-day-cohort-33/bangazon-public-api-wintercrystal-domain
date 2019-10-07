@@ -50,9 +50,6 @@ class Products(ViewSet):
         customer = Customer.objects.get(user=request.auth.user)
         new_product.customer = customer
 
-        image = Image.objects.get(pk=request.data["image_id"])
-        new_product.image = image
-
         product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
         new_product.product_category = product_category
 
