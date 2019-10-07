@@ -7,7 +7,6 @@ from bangazonapi.views import *
 # pylint: disable=invalid-name
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'products', Products, 'product')
-router.register(r'images', Images, 'image')
 router.register(r'productcategories', ProductCategories, 'productcategory')
 router.register(r'orderproducts', OrderProducts, 'orderproduct')
 router.register(r'customers', Customers, 'customer')

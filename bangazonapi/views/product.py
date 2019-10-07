@@ -6,7 +6,6 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Product
 from bangazonapi.models import Customer
-from bangazonapi.models import Image
 from bangazonapi.models import ProductCategory
 
 # Author: Danny Barker
@@ -49,9 +48,6 @@ class Products(ViewSet):
 
         customer = Customer.objects.get(user=request.auth.user)
         new_product.customer = customer
-
-        image = Image.objects.get(pk=request.data["image_id"])
-        new_product.image = image
 
         product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
         new_product.product_category = product_category

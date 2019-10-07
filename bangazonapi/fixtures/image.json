@@ -1,9 +1,0 @@
-[
-    {
-        "model": "bangazonapi.image",
-        "pk": 1,
-        "fields": {
-            "product_pic": "bangazonapi/product_imgs/test.jpeg"
-        }
-    }
-]

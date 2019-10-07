@@ -2,7 +2,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from .customer import Customer
 from .productcategory import ProductCategory
-from .image import Image
 
 class Product(models.Model):
 
@@ -14,7 +13,7 @@ class Product(models.Model):
     created_date = models.DateField(default="0000-00-00",)
     product_category = models.ForeignKey(ProductCategory, on_delete=models.DO_NOTHING,)
     location = models.CharField(max_length=50,)
-    image = models.ForeignKey(Image, on_delete=models.DO_NOTHING,)
+    image = models.ImageField(upload_to='product_imgs/', height_field=None, width_field=None, max_length=None, null=True)
 
 
     class Meta:
