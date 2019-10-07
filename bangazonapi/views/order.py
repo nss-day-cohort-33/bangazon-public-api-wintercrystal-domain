@@ -99,9 +99,9 @@ class Orders(ViewSet):
         """
         orders = Order.objects.all()
 
-        customer = self.request.query_params.get('customer', None)
+        customer = self.request.query_params.get('customer_id', None)
         if customer is not None:
-            orders = order.filter(product_customer__id=request.auth.user)
+            orders = orders.filter(customer__id=customer)
 
         serializer = OrderSerializer(
             orders, many=True, context={'request': request})
