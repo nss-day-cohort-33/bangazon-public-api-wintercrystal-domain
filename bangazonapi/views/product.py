@@ -6,7 +6,6 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Product
 from bangazonapi.models import Customer
-from bangazonapi.models import Image
 from bangazonapi.models import ProductCategory
 
 # Author: Danny Barker

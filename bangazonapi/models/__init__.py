@@ -1,6 +1,5 @@
 from .customer import Customer
 from .order import Order
-from .image import Image
 from .orderproduct import OrderProduct
 from .payment import Payment
 from .product import Product
