@@ -98,6 +98,11 @@ class Orders(ViewSet):
             Response -- JSON serialized list of park areas
         """
         orders = Order.objects.all()
+
+        customer = self.request.query_params.get('customer_id', None)
+        if customer is not None:
+            orders = orders.filter(customer__id=customer)
+
         serializer = OrderSerializer(
             orders, many=True, context={'request': request})
         return Response(serializer.data)
