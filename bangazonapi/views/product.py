@@ -129,8 +129,24 @@ class Products(ViewSet):
 
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
+        quantity = self.request.query_params.get('quantity', None)
         if category is not None:
             products = products.filter(product_category__id=category)
+
+        if quantity is not None:
+            quantity = int(quantity)
+            length = len(products)
+            new_products = list()
+            count = 0
+            for product in products:
+                count += 1
+                if count - 1 + quantity >= length:
+                    new_products.append(product)
+                    if count == length:
+                        products = new_products
+                        break
+
+
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})
