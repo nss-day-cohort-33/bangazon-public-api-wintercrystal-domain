@@ -128,9 +128,9 @@ class Products(ViewSet):
         products = Product.objects.all()
 
         # Support filtering attractions by area id
-        # area = self.request.query_params.get('area', None)
-        # if area is not None:
-        #     attractions = attractions.filter(area__id=area)
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            products = products.filter(product_category__id=category)
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})
