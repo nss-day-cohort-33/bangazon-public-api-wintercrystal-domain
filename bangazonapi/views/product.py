@@ -7,6 +7,7 @@ from rest_framework import status
 from bangazonapi.models import Product
 from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Author: Danny Barker
 # Purpose: Allow a user to communicate with the Bangazon database to GET PUT
@@ -31,7 +32,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
 class Products(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
-
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     def create(self, request):
         """Handle POST operations
 
