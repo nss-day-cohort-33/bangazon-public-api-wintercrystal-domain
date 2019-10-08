@@ -45,6 +45,7 @@ class Products(ViewSet):
         new_product.quantity = request.data["quantity"]
         new_product.created_date = request.data["created_date"]
         new_product.location = request.data["location"]
+        new_product.location = request.data["image"]
 
         customer = Customer.objects.get(user=request.auth.user)
         new_product.customer = customer
