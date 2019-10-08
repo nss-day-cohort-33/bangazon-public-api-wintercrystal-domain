@@ -91,9 +91,9 @@ class Payments(ViewSet):
         payment_types = Payment.objects.all()
 
         # Support filtering attractions by area id
-        # area = self.request.query_params.get('area', None)
-        # if area is not None:
-        #     attractions = attractions.filter(area__id=area)
+        payment_type = self.request.query_params.get('customer', None)
+        if payment_type is not None:
+            payment_types = payment_types.filter(customer__id=payment_type)
 
         serializer = PaymentSerializer(
             payment_types, many=True, context={'request': request})
