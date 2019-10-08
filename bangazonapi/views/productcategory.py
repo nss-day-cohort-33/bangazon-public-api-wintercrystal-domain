@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import ProductCategory
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -30,6 +31,7 @@ class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 class ProductCategories(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def create(self, request):
         """Handle POST operations
