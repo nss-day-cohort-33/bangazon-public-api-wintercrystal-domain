@@ -104,6 +104,12 @@ class OrderProducts(ViewSet):
         # area = self.request.query_params.get('area', None)
         # if area is not None:
         #     OrderProducts = OrderProducts.filter(area__id=area)
+        product = self.request.query_params.get('product_id', None)
+        order = self.request.query_params.get('order_id', None)
+        if order is not None:
+            OrderProducts = OrderProducts.filter(order__id=order)
+        if product is not None:
+            OrderProducts = OrderProducts.filter(product__id=product)
 
         serializer = OrderProductSerializer(
             OrderProducts, many=True, context={'request': request})

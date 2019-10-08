@@ -40,7 +40,7 @@ class Orders(ViewSet):
         """
         neworder = Order()
         neworder.created_date = request.data["created_date"]
-        customer = Customer.objects.get(user=request.auth.user)
+        customer = Customer.objects.get(id=request.data["customer_id"])
         neworder.customer = customer
         neworder.save()
 
@@ -100,8 +100,13 @@ class Orders(ViewSet):
         orders = Order.objects.all()
 
         customer = self.request.query_params.get('customer_id', None)
+        payment = self.request.query_params.get('payment_id', None)
         if customer is not None:
             orders = orders.filter(customer__id=customer)
+            if payment is None:
+                orders = orders.filter(payment_type__id=None)
+        if payment is not None:
+            orders = orders.filter(payment__id=payment)
 
         serializer = OrderSerializer(
             orders, many=True, context={'request': request})
