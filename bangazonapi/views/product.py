@@ -124,7 +124,7 @@ class Products(ViewSet):
             Response -- JSON serialized list of park attractions
         """
         products = Product.objects.all()
-        product_list = []
+        product_list = list()
 
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
@@ -139,14 +139,14 @@ class Products(ViewSet):
         if quantity is not None:
             quantity = int(quantity)
             length = len(products)
-            new_products = list()
             count = 0
             for product in products:
                 count += 1
                 if count - 1 + quantity >= length:
-                    new_products.append(product)
+                    if product.quantity > 0:
+                        product_list.append(product)
                     if count == length:
-                        products = new_products
+                        products = product_list
                         break
 
 
