@@ -15,6 +15,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    # Depth of one allows user object to be seen on Customer
     class Meta:
         model = Customer
         url = serializers.HyperlinkedIdentityField(
@@ -44,7 +45,8 @@ class Customers(ViewSet):
         new_customer = Customer()
         new_customer.phone_number = request.data["phone_number"]
         new_customer.address = request.data["address"]
-
+        # Grab the Customer object based on the user ID
+        # This + User view allows you to see the entire user object on the Customer instance
         user = Customer.objects.get(user=request.auth.user)
         new_customer.user = user
 
