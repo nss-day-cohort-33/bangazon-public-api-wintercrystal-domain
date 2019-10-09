@@ -27,7 +27,6 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
         )
         fields = ('id', 'url', 'order_id', 'product_id', 'quantity')
 
-
 class OrderProducts(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
 
