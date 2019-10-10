@@ -27,7 +27,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'name', 'price', 'description', 'quantity', 'created_date', 'location', 'customer', 'image', 'product_category')
-        depth = 2
+        depth = 1
 
 
 class Products(ViewSet):
@@ -123,32 +123,31 @@ class Products(ViewSet):
             Response -- JSON serialized list of park attractions
         """
         products = Product.objects.all()
-        product_list = list()
 
-        # Support filtering attractions by area id
+        # Support filtering by category and/or quantity
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
+        location = self.request.query_params.get('location', None)
+        order = self.request.query_params.get('order_by', None)
+        direction = self.request.query_params.get('direction', None)
+
+        if order is not None:
+            filter = order
+
+            if direction is not None:
+                if direction == "desc":
+                    filter = f'-{order}'
+
+            products = products.order_by(filter)
+
+        if location is not None:
+            products = products.filter(location__contains=location)
+
         if category is not None:
             products = products.filter(product_category__id=category)
-            for product in products:
-                if product.quantity > 0:
-                    product_list.append(product)
-            products = product_list
 
         if quantity is not None:
-            quantity = int(quantity)
-            length = len(products)
-            count = 0
-            for product in products:
-                count += 1
-                if count - 1 + quantity >= length:
-                    if product.quantity > 0:
-                        product_list.append(product)
-                    if count == length:
-                        products = product_list
-                        break
-
-
+            products = products.order_by("-created_date")[:int(quantity)]
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})
