@@ -3,7 +3,7 @@
         "model": "bangazonapi.favorite",
         "pk": 1,
         "fields": {
-            "user_id": "1",
+            "customer_id": "1",
             "seller_id": "2"
         }
     },
@@ -11,8 +11,8 @@
         "model": "bangazonapi.favorite",
         "pk": 2,
         "fields": {
-            "user_id": "2",
-            "seller_id": "3"
+            "customer_id": "2",
+            "seller_id": "1"
         }
     }
 ]

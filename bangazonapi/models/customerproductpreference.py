@@ -11,7 +11,7 @@ methods: all
 
 
 class CustomerProductPreference(models.Model):
-    user = models.ForeignKey(Customer, on_delete=models.DO_NOTHING,)
+    user = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, related_name="customerproducts")
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING,)
     like = models.BooleanField(default = True )
 
