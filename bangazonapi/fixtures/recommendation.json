@@ -1,0 +1,22 @@
+[
+    {
+        "model": "bangazonapi.recommendation",
+        "pk": 1,
+        "fields": {
+            "product_id": "1",
+            "customer_id": "1",
+            "recommender_id": "2",
+            "is_shown": "false"
+        }
+    },
+    {
+        "model": "bangazonapi.recommendation",
+        "pk": 2,
+        "fields": {
+            "product_id": "2",
+            "customer_id": "2",
+            "recommender_id": "1",
+            "is_shown": "false"
+        }
+    }
+]
