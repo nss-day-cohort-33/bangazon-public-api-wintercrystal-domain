@@ -3,8 +3,9 @@ from .register import login_user
 from .order import Orders
 from .paymenttype import Payments
 from .product import Products
-
+from .recommendation import Recommendations
 from .productcategory import ProductCategories
 from .orderproduct import OrderProducts
 from .customer import Customers
 from .user import Users
+from .rating import Ratings
