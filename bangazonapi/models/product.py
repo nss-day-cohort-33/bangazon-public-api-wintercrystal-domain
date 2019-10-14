@@ -6,7 +6,7 @@ from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
 
 class Product(SafeDeleteModel):
-    
+
     _safedelete_policy = SOFT_DELETE
     name = models.CharField(max_length=50,)
     customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING,)
