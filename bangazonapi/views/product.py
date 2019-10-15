@@ -125,7 +125,6 @@ class Products(ViewSet):
 
         products = Product.objects.all()
         product_list = list()
-        customer = Customer.objects.get(user=request.auth.user)
 
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
@@ -153,7 +152,8 @@ class Products(ViewSet):
                         break
 
         if product_customer is not None:
-            products = customer.seller.all()
+            customer = Customer.objects.get(user=request.auth.user).seller.all()
+            products = customer
 
 
         serializer = ProductSerializer(
