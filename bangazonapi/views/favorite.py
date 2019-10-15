@@ -1,7 +1,6 @@
 """
    Author: Mary West
-   Purpose: To convert order products data to json
-   Methods: GET, DELETE, POST
+   Methods: GET, POST
 """
 
 """View module for handling requests about park areas"""
@@ -69,11 +68,6 @@ class Favorites(ViewSet):
             Response -- JSON serialized list of park Ratings
         """
         favorite = Favorite.objects.all()
-
-        # Support filtering Ratings by area id
-        # name = self.request.query_params.get('name', None)
-        # if name is not None:
-        #     ProductCategories = ProductCategories.filter(name=name)
 
         serializer = FavoriteSerializer(
             favorite, many=True, context={'request': request})
