@@ -80,6 +80,7 @@ class Customers(ViewSet):
         """
         customer = Customer.objects.get(pk=pk)
         customer.user.is_active = False
+        # customer.user.last_name = request.data["last_name"]
         customer.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
