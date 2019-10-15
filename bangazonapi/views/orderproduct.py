@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import OrderProduct, Order, Product
+from .product import ProductSerializer
 
 
 class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,6 +20,7 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    product = ProductSerializer(many=False)
     class Meta:
         model = OrderProduct
         url = serializers.HyperlinkedIdentityField(
