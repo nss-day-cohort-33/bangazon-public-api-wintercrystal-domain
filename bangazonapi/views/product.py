@@ -122,12 +122,18 @@ class Products(ViewSet):
         Returns:
             Response -- JSON serialized list of park attractions
         """
+
         products = Product.objects.all()
         product_list = list()
+        customer = Customer.objects.get(user=request.auth.user)
 
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
+        product_customer = self.request.query_params.get('customer', None)
+
+        if product_customer is not None:
+            products = customer.seller.all()
         if category is not None:
             products = products.filter(product_category__id=category)
             for product in products:
