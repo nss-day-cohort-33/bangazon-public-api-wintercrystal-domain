@@ -16,6 +16,7 @@ router.register(r'paymenttypes', Payments, 'payment')
 router.register(r'customerpreferences', CustomerProductPreferences, 'customerproductpreference')
 router.register(r'recommendations', Recommendations, 'recommendation')
 router.register(r'ratings', Ratings, 'rating')
+router.register(r'favorites', Favorites, 'favorite')
 
 
 # Wire up our API using automatic URL routing.
