@@ -40,7 +40,7 @@ class CustomerProductPreferences(ViewSet):
             Response -- JSON serialized ParkArea instance
         """
         new_preference = CustomerProductPreference()
-        user = Customer.objects.get(id=request.data["user"])
+        user = Customer.objects.get(user=request.auth.user)
         product = Product.objects.get(id=request.data["product"])
         new_preference.user = user
         new_preference.product = product
