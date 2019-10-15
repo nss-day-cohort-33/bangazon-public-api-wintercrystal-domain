@@ -78,9 +78,13 @@ class Customers(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        customer = Customer.objects.get(pk=pk)
-        customer.user.is_active = False
-        # customer.user.last_name = request.data["last_name"]
+        user = User.objects.get(pk=request.auth.user.id)
+        user.last_name = request.data["last_name"]
+        user.save()
+
+        customer = Customer.objects.get(user=user)
+        customer.address = request.data["address"]
+        customer.phone_number = request.data["phone_number"]
         customer.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
