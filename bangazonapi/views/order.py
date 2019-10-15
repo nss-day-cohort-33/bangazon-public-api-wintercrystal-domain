@@ -42,6 +42,7 @@ class Orders(ViewSet):
         neworder = Order()
         neworder.created_date = request.data["created_date"]
         customer = Customer.objects.get(id=request.data["customer_id"])
+        neworder.payment_type = Payment.objects.get(id=request.data["payment_type"])
         neworder.customer = customer
         neworder.save()
 
