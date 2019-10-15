@@ -132,8 +132,6 @@ class Products(ViewSet):
         quantity = self.request.query_params.get('quantity', None)
         product_customer = self.request.query_params.get('customer', None)
 
-        if product_customer is not None:
-            products = customer.seller.all()
         if category is not None:
             products = products.filter(product_category__id=category)
             for product in products:
@@ -154,6 +152,8 @@ class Products(ViewSet):
                         products = product_list
                         break
 
+        if product_customer is not None:
+            products = customer.seller.all()
 
 
         serializer = ProductSerializer(
