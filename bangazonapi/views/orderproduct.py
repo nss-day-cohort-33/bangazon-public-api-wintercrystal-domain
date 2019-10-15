@@ -25,7 +25,8 @@ class OrderProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='orderproduct',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'order_id', 'product_id', 'quantity')
+        fields = ('id', 'url', 'order', 'product', 'quantity')
+        depth = 2
 
 class OrderProducts(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
