@@ -13,6 +13,8 @@ router.register(r'customers', Customers, 'customer')
 router.register(r'users', Users, 'user')
 router.register(r'orders', Orders, 'order')
 router.register(r'paymenttypes', Payments, 'payment')
+router.register(r'recommendations', Recommendations, 'recommendation')
+router.register(r'ratings', Ratings, 'rating')
 
 
 # Wire up our API using automatic URL routing.
