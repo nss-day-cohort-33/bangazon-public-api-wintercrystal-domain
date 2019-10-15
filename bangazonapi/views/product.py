@@ -128,6 +128,20 @@ class Products(ViewSet):
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
+        location = self.request.query_params.get('location', None)
+# Location param is for home page search bar, which is querying location properties on prodcuts and sending back matching products
+# location__iexact is filtering by location string regardless of case
+        if location is not None:
+            products = products.filter(location__iexact=location)
+            for product in products:
+                if product.quantity > 0:
+                    product_list.append(product)
+            products = product_list
+
+
+
+
+
         if category is not None:
             products = products.filter(product_category__id=category)
             for product in products:
