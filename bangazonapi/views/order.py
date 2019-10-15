@@ -101,13 +101,17 @@ class Orders(ViewSet):
         orders = Order.objects.all()
 
         customer = self.request.query_params.get('customer_id', None)
+        complete = self.request.query_params.get('complete', None)
         payment = self.request.query_params.get('payment_id', None)
         if customer is not None:
             orders = orders.filter(customer__id=customer)
-            if payment is None:
-                orders = orders.filter(payment_type__id=None)
+            if complete is None:
+                if payment is None:
+                    orders = orders.filter(payment_type__id=None)
         if payment is not None:
-            orders = orders.filter(payment__id=payment)
+            orders = orders.filter(payment_type__id=payment)
+        if complete is not None:
+            orders = orders.filter(payment_type__id=not None)
 
         serializer = OrderSerializer(
             orders, many=True, context={'request': request})
