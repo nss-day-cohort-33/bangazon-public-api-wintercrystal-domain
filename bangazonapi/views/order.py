@@ -68,9 +68,23 @@ class Orders(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
+        ordered_products = set()
         order = Order.objects.get(pk=pk)
-        order.payment_type = request.data["payment_type"]
+        payment = Payment.objects.get(pk=request.data["payment_type"])
+        order.payment_type = payment
         order.save()
+        if order.payment_type is not "NULL":
+            ordered_items = order.invoiceline.all()
+
+            for oi in ordered_items:
+                ordered_products.add(oi.product)
+
+            products = list(ordered_products)
+
+            for p in products:
+                num_sold = p.item.filter(order=order).count()
+                p.quantity = p.new_inventory(num_sold)
+                p.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -104,11 +118,15 @@ class Orders(ViewSet):
         complete = self.request.query_params.get('complete', None)
         payment = self.request.query_params.get('payment_id', None)
         if customer is not None:
-            complete_bool = bool(complete)
-            orders = orders.filter(customer__id=customer, payment_type__id__isnull=complete_bool)
+            if complete == "1":
+                orders = orders.filter(customer__id=customer, payment_type__id__isnull=True)
+            if complete == "0":
+                orders = orders.filter(customer__id=customer, payment_type__id__isnull=False)
+
         if payment is not None:
             orders = orders.filter(payment_type__id=payment)
-        if complete is not None:
+
+        if complete is not None and customer is None:
             complete_bool = bool(complete)
             orders = orders.filter(payment_type__id__isnull=complete_bool)
 

@@ -8,6 +8,7 @@ from bangazonapi.models import Product
 from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
 from bangazonapi.models import OrderProduct
+from bangazonapi.models import Order
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Author: Danny Barker
@@ -91,9 +92,6 @@ class Products(ViewSet):
         customer = Customer.objects.get(user=request.auth.user)
         product.customer = customer
 
-        image = Image.objects.get(pk=request.data["image_id"])
-        product.image = image
-
         product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
         product.product_category = product_category
         product.save()
@@ -129,6 +127,7 @@ class Products(ViewSet):
         products = Product.objects.all()
 
 
+
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
@@ -147,9 +146,8 @@ class Products(ViewSet):
             products = products.filter(quantity__gte=1).order_by("-created_date")[:quantity]
 
         if product_customer is not None:
-            customer = Customer.objects.get(user=request.auth.user).seller.all()
-            products = customer
+            customer_products = Customer.objects.get(user=request.auth.user).seller.all()
+            products = customer_products
 
         serializer = ProductSerializer(products, many=True, context={'request': request})
-
         return Response(serializer.data)

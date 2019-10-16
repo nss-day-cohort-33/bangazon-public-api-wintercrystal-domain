@@ -23,6 +23,10 @@ class Product(SafeDeleteModel):
     def number_sold(self):
         sold = OrderProduct.objects.filter(product=self, order__payment_type__isnull=False)
         return sold.count()
+
+    def new_inventory(self, num):
+        inv = self.quantity - num
+        return inv
     class Meta:
         verbose_name = ("product")
         verbose_name_plural = ("products")
