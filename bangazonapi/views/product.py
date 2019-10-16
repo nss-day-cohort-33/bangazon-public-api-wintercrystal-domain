@@ -2,13 +2,14 @@
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Product
 from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
 from bangazonapi.models import OrderProduct
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Author: Danny Barker
 # Purpose: Allow a user to communicate with the Bangazon database to GET PUT
@@ -62,7 +63,6 @@ class Products(ViewSet):
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single park area
-
         Returns:
             Response -- JSON serialized park area instance
         """
@@ -81,21 +81,7 @@ class Products(ViewSet):
             Response -- Empty body with 204 status code
         """
         product = Product.objects.get(pk=pk)
-        product.name = request.data["name"]
-        product.price = request.data["price"]
-        product.description = request.data["description"]
         product.quantity = request.data["quantity"]
-        product.created_date = request.data["created_date"]
-        product.location = request.data["location"]
-
-        customer = Customer.objects.get(user=request.auth.user)
-        product.customer = customer
-
-        image = Image.objects.get(pk=request.data["image_id"])
-        product.image = image
-
-        product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
-        product.product_category = product_category
         product.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -117,7 +103,7 @@ class Products(ViewSet):
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+    permission_classes=(AllowAny)
     def list(self, request):
         """Handle GET requests to park attractions resource
 
@@ -126,7 +112,7 @@ class Products(ViewSet):
         """
 
         # products = Product.objects.all()
-        products = Product.objects.filter(quantity__gte=1)
+        products = Product.objects.all()
 
 
         # Support filtering attractions by area id
