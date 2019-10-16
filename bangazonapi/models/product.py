@@ -3,6 +3,7 @@ from django.db import models
 from .customer import Customer
 from .productcategory import ProductCategory
 from .orderproduct import OrderProduct
+from .order import Order
 from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
 
@@ -27,6 +28,13 @@ class Product(SafeDeleteModel):
     def new_inventory(self, num):
         inv = self.quantity - num
         return inv
+
+    # def new_cart(self, num):
+    #     self.quantity = num
+
+    # def new_quantity(self, ord_id):
+    #     order = Order.objects.get(pk=ord_id).invoiceline.filter(product=self)
+    #     return order.count()
     class Meta:
         verbose_name = ("product")
         verbose_name_plural = ("products")
