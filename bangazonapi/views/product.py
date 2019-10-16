@@ -3,7 +3,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework import permissions
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Product
@@ -34,7 +34,15 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
 class Products(ViewSet):
     """Park Areas for Kennywood Amusement Park"""
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    permission_classes_by_action = {
+    'create': [permissions.IsAuthenticated],
+    'list': [permissions.AllowAny],
+    'retrieve': [permissions.AllowAny],
+    'update': [permissions.IsAuthenticated],
+    'destroy': [permissions.IsAuthenticated]
+    }
+
     def create(self, request):
         """Handle POST operations
 
@@ -61,6 +69,8 @@ class Products(ViewSet):
 
         return Response(serializer.data)
 
+    # @decorators.api_view(['GET'])
+    # @decorators.permission_classes([AllowAny])
     def retrieve(self, request, pk=None):
         """Handle GET requests for single park area
         Returns:
@@ -103,7 +113,9 @@ class Products(ViewSet):
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    permission_classes=(AllowAny)
+
+    # @api_view(['GET'])
+    # @permission_classes([AllowAny],)
     def list(self, request):
         """Handle GET requests to park attractions resource
 
@@ -132,9 +144,9 @@ class Products(ViewSet):
             quantity = int(quantity)
             products = products.order_by("-created_date")[:quantity]
 
-        if product_customer is not None:
-            customer = Customer.objects.get(user=request.auth.user).seller.all()
-            products = customer
+        # if product_customer is not None:
+        #     customer = Customer.objects.get(user=request.auth.user).seller.all()
+        #     products = customer
 
         serializer = ProductSerializer(products, many=True, context={'request': request})
 
