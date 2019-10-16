@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Customer, Favorite
+from .customer import CustomerSerializer
 
 
 class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,6 +40,7 @@ class Favorites(ViewSet):
         new_favorite = Favorite()
         customer = Customer.objects.get(user=request.auth.user)
         new_favorite.customer = customer
+
         seller = Customer.objects.get(pk=request.data["seller_id"])
         new_favorite.customer = seller
         new_favorite.save()
@@ -67,8 +69,9 @@ class Favorites(ViewSet):
         Returns:
             Response -- JSON serialized list of park Ratings
         """
-        favorite = Favorite.objects.all()
+        customer = Customer.objects.get(user=request.auth.user)
+        sellers_i_love = Favorite.objects.filter(customer=customer)
 
         serializer = FavoriteSerializer(
-            favorite, many=True, context={'request': request})
+            sellers_i_love, many=True, context={'request': request})
         return Response(serializer.data)

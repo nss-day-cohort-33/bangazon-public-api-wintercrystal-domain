@@ -12,7 +12,7 @@ methods: all
 
 class Favorite(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, related_name='favorites', null=True)
-    seller = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, null=True)
+    seller = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, related_name='favorited', null=True)
 
 
 
