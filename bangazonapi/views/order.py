@@ -113,7 +113,11 @@ class Orders(ViewSet):
         if payment is not None:
             orders = orders.filter(payment_type__id=payment)
         if complete is not None:
-            orders = orders.filter(payment_type__id__isnull=False)
+            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+            if complete == "1":
+                orders = orders.filter(payment_type__id__isnull=False)
+            elif complete == "0":
+                orders = orders.filter(payment_type__id__isnull=True)
 
         serializer = OrderSerializer(
             orders, many=True, context={'request': request})
