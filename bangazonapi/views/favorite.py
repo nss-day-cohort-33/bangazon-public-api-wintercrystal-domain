@@ -1,9 +1,3 @@
-"""
-   Author: Mary West
-   Methods: GET, POST
-"""
-
-"""View module for handling requests about park areas"""
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -12,6 +6,12 @@ from rest_framework import status
 from bangazonapi.models import Customer, Favorite
 from .customer import CustomerSerializer
 
+"""
+   Author: Mary West
+   Methods: GET, POST
+"""
+
+"""View module for handling requests about park areas"""
 
 class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for park areas
