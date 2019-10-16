@@ -7,6 +7,7 @@ from rest_framework import status
 from bangazonapi.models import Product
 from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
+from bangazonapi.models import OrderProduct
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Author: Danny Barker
@@ -26,7 +27,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             view_name='product',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'price', 'description', 'quantity', 'created_date', 'location', 'customer', 'image', 'product_category')
+        fields = ('id', 'url', 'name', 'price', 'description', 'quantity', 'created_date', 'location', 'number_sold', 'customer', 'image', 'product_category')
         depth = 2
 
 
@@ -68,6 +69,7 @@ class Products(ViewSet):
         try:
             product = Product.objects.get(pk=pk)
             serializer = ProductSerializer(product, context={'request': request})
+
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -122,48 +124,32 @@ class Products(ViewSet):
         Returns:
             Response -- JSON serialized list of park attractions
         """
-        products = Product.objects.all()
-        product_list = list()
+
+        # products = Product.objects.all()
+        products = Product.objects.filter(quantity__gte=1)
+
 
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
+        product_customer = self.request.query_params.get('customer', None)
         location = self.request.query_params.get('location', None)
 # Location param is for home page search bar, which is querying location properties on prodcuts and sending back matching products
 # location__iexact is filtering by location string regardless of case
         if location is not None:
             products = products.filter(location__iexact=location)
-            for product in products:
-                if product.quantity > 0:
-                    product_list.append(product)
-            products = product_list
-
-
-
-
 
         if category is not None:
             products = products.filter(product_category__id=category)
-            for product in products:
-                if product.quantity > 0:
-                    product_list.append(product)
-            products = product_list
 
         if quantity is not None:
             quantity = int(quantity)
-            length = len(products)
-            count = 0
-            for product in products:
-                count += 1
-                if count - 1 + quantity >= length:
-                    if product.quantity > 0:
-                        product_list.append(product)
-                    if count == length:
-                        products = product_list
-                        break
+            products = products.order_by("-created_date")[:quantity]
 
+        if product_customer is not None:
+            customer = Customer.objects.get(user=request.auth.user).seller.all()
+            products = customer
 
+        serializer = ProductSerializer(products, many=True, context={'request': request})
 
-        serializer = ProductSerializer(
-            products, many=True, context={'request': request})
         return Response(serializer.data)
