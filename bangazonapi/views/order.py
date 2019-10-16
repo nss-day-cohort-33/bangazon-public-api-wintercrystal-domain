@@ -118,9 +118,9 @@ class Orders(ViewSet):
         complete = self.request.query_params.get('complete', None)
         payment = self.request.query_params.get('payment_id', None)
         if customer is not None:
-            if complete == "1":
-                orders = orders.filter(customer__id=customer, payment_type__id__isnull=True)
             if complete == "0":
+                orders = orders.filter(customer__id=customer, payment_type__id__isnull=True)
+            if complete == "1":
                 orders = orders.filter(customer__id=customer, payment_type__id__isnull=False)
 
         if payment is not None:
