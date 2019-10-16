@@ -1,4 +1,4 @@
-"""View module for handling requests about park areas"""
+
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -17,7 +17,7 @@ from bangazonapi.models import OrderProduct
 # Methods: GET PUT(id) POST DELETE
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for park areas
+    """JSON serializer for product
 
     Arguments:
         serializers
@@ -33,16 +33,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Products(ViewSet):
-    """Park Areas for Kennywood Amusement Park"""
 
-    permission_classes_by_action = {
-    'create': [permissions.IsAuthenticated],
-    'list': [permissions.AllowAny],
-    'retrieve': [permissions.AllowAny],
-    'update': [permissions.IsAuthenticated],
-    'destroy': [permissions.IsAuthenticated]
-    }
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def create(self, request):
         """Handle POST operations
 
@@ -69,12 +61,10 @@ class Products(ViewSet):
 
         return Response(serializer.data)
 
-    # @decorators.api_view(['GET'])
-    # @decorators.permission_classes([AllowAny])
     def retrieve(self, request, pk=None):
-        """Handle GET requests for single park area
+        """Handle GET requests for single product
         Returns:
-            Response -- JSON serialized park area instance
+            Response -- JSON serialized product instance
         """
         try:
             product = Product.objects.get(pk=pk)
@@ -85,7 +75,7 @@ class Products(ViewSet):
             return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
-        """Handle PUT requests for a park area attraction
+        """Handle PUT requests for a product attraction
 
         Returns:
             Response -- Empty body with 204 status code
@@ -97,7 +87,7 @@ class Products(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single park are
+        """Handle DELETE requests for a single product
 
         Returns:
             Response -- 200, 404, or 500 status code
@@ -114,13 +104,12 @@ class Products(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    # @api_view(['GET'])
-    # @permission_classes([AllowAny],)
+
     def list(self, request):
-        """Handle GET requests to park attractions resource
+        """Handle GET requests to product resource
 
         Returns:
-            Response -- JSON serialized list of park attractions
+            Response -- JSON serialized list of product
         """
 
         # products = Product.objects.all()
