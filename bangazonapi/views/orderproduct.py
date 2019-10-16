@@ -40,8 +40,8 @@ class OrderProducts(ViewSet):
             Response -- JSON serialized product category instance
         """
         new_order_product = OrderProduct()
-        new_order_product.order = Order.objects.get(pk=request.data["order_id"])
-        new_order_product.product = Product.objects.get(pk=request.data["product_id"])
+        new_order_product.order = Order.objects.get(pk=request.data["order"])
+        new_order_product.product = Product.objects.get(pk=request.data["product"])
         # new_order_product.order = request.data["order_id"]
         # new_order_product.product = request.data["product_id"]
         new_order_product.quantity = request.data["quantity"]
