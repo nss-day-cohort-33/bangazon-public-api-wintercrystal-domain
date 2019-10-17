@@ -101,17 +101,29 @@ class OrderProducts(ViewSet):
             Response -- JSON serialized list of park OrderProducts
         """
         OrderProducts = OrderProduct.objects.all()
+        # ordered_products = set()
 
         # Support filtering OrderProducts by area id
         # area = self.request.query_params.get('area', None)
         # if area is not None:
         #     OrderProducts = OrderProducts.filter(area__id=area)
-        product = self.request.query_params.get('product_id', None)
+        productId = self.request.query_params.get('product_id', None)
         order = self.request.query_params.get('order_id', None)
         if order is not None:
             OrderProducts = OrderProducts.filter(order__id=order)
-        if product is not None:
-            OrderProducts = OrderProducts.filter(product__id=product)
+            # if productId is None:
+            #     for op in OrderProducts:
+            #         ordered_products.add(op.product)
+
+            #     product_items = list(ordered_products)
+
+            #     for p in product_items:
+            #         num = p.item.filter(order__id=order).count()
+            #         p.new_cart(num)
+            #         p.save()
+
+        if productId is not None:
+            OrderProducts = OrderProducts.filter(product__id=productId)
 
         serializer = OrderProductSerializer(
             OrderProducts, many=True, context={'request': request})

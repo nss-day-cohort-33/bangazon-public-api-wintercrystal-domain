@@ -10,6 +10,8 @@ from bangazonapi.models import Product
 from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
 from bangazonapi.models import OrderProduct
+from bangazonapi.models import Order
+
 
 # Author: Danny Barker
 # Purpose: Allow a user to communicate with the Bangazon database to GET PUT
@@ -124,18 +126,18 @@ class Products(ViewSet):
 # Location param is for home page search bar, which is querying location properties on prodcuts and sending back matching products
 # location__iexact is filtering by location string regardless of case
         if location is not None:
-            products = products.filter(location__iexact=location)
+            products = products.filter(location__iexact=location, quantity__gte=1)
 
         if category is not None:
-            products = products.filter(product_category__id=category)
+            products = products.filter(product_category__id=category, quantity__gte=1)
 
         if quantity is not None:
             quantity = int(quantity)
-            products = products.order_by("-created_date")[:quantity]
+            products = products.filter(quantity__gte=1).order_by("-created_date")[:quantity]
 
         if product_customer is not None:
-            customer = Customer.objects.get(user=request.auth.user).seller.all()
-            products = customer
+            customer_products = Customer.objects.get(user=request.auth.user).seller.all()
+            products = customer_products
 
         serializer = ProductSerializer(products, many=True, context={'request': request})
 
