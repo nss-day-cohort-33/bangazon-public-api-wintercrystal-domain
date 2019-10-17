@@ -1,7 +1,9 @@
-"""View module for handling requests about park areas"""
+
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Product
@@ -9,7 +11,7 @@ from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
 from bangazonapi.models import OrderProduct
 from bangazonapi.models import Order
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 
 # Author: Danny Barker
 # Purpose: Allow a user to communicate with the Bangazon database to GET PUT
@@ -17,7 +19,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Methods: GET PUT(id) POST DELETE
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for park areas
+    """JSON serializer for product
 
     Arguments:
         serializers
@@ -33,8 +35,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Products(ViewSet):
-    """Park Areas for Kennywood Amusement Park"""
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def create(self, request):
         """Handle POST operations
 
@@ -62,10 +64,9 @@ class Products(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        """Handle GET requests for single park area
-
+        """Handle GET requests for single product
         Returns:
-            Response -- JSON serialized park area instance
+            Response -- JSON serialized product instance
         """
         try:
             product = Product.objects.get(pk=pk)
@@ -76,30 +77,19 @@ class Products(ViewSet):
             return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
-        """Handle PUT requests for a park area attraction
+        """Handle PUT requests for a product attraction
 
         Returns:
             Response -- Empty body with 204 status code
         """
         product = Product.objects.get(pk=pk)
-        product.name = request.data["name"]
-        product.price = request.data["price"]
-        product.description = request.data["description"]
         product.quantity = request.data["quantity"]
-        product.created_date = request.data["created_date"]
-        product.location = request.data["location"]
-
-        customer = Customer.objects.get(user=request.auth.user)
-        product.customer = customer
-
-        product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
-        product.product_category = product_category
         product.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single park are
+        """Handle DELETE requests for a single product
 
         Returns:
             Response -- 200, 404, or 500 status code
@@ -116,16 +106,16 @@ class Products(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
     def list(self, request):
-        """Handle GET requests to park attractions resource
+        """Handle GET requests to product resource
 
         Returns:
-            Response -- JSON serialized list of park attractions
+            Response -- JSON serialized list of product
         """
 
         # products = Product.objects.all()
         products = Product.objects.all()
-
 
 
         # Support filtering attractions by area id
@@ -150,4 +140,5 @@ class Products(ViewSet):
             products = customer_products
 
         serializer = ProductSerializer(products, many=True, context={'request': request})
+
         return Response(serializer.data)
