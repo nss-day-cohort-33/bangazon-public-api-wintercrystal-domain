@@ -29,12 +29,6 @@ class Product(SafeDeleteModel):
         inv = self.quantity - num
         return inv
 
-    # def new_cart(self, num):
-    #     self.quantity = num
-
-    # def new_quantity(self, ord_id):
-    #     order = Order.objects.get(pk=ord_id).invoiceline.filter(product=self)
-    #     return order.count()
     class Meta:
         verbose_name = ("product")
         verbose_name_plural = ("products")

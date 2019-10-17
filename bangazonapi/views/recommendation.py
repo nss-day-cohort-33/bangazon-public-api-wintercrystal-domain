@@ -71,11 +71,6 @@ class Recommendations(ViewSet):
         """
         recommendation = Recommendation.objects.all()
 
-        # Support filtering Recommendations by area id
-        # name = self.request.query_params.get('name', None)
-        # if name is not None:
-        #     ProductCategories = ProductCategories.filter(name=name)
-
         serializer = RecommendationSerializer(
             recommendation, many=True, context={'request': request})
         return Response(serializer.data)
