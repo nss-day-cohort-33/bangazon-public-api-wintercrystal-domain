@@ -20,6 +20,7 @@ class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
         serializers
     """
     customer = CustomerSerializer(many=False)
+    seller = CustomerSerializer(many=False)
     class Meta:
         model = Favorite
         url = serializers.HyperlinkedIdentityField(
