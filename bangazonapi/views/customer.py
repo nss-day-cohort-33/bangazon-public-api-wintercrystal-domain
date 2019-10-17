@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Customer
 from django.contrib.auth.models import User
+from .user import UserSerializer
 
 
 
@@ -15,6 +16,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    user = UserSerializer(many=False)
     # Depth of one allows user object to be seen on Customer
     class Meta:
         model = Customer
