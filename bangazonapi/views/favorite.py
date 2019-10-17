@@ -44,7 +44,7 @@ class Favorites(ViewSet):
         new_favorite.customer = customer
 
         seller = Customer.objects.get(pk=request.data["seller_id"])
-        new_favorite.customer = seller
+        new_favorite.seller = seller
         new_favorite.save()
 
         serializer = FavoriteSerializer(new_favorite, context={'request': request})
