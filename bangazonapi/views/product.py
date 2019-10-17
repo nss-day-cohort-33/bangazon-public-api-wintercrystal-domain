@@ -133,9 +133,9 @@ class Products(ViewSet):
             quantity = int(quantity)
             products = products.order_by("-created_date")[:quantity]
 
-        # if product_customer is not None:
-        #     customer = Customer.objects.get(user=request.auth.user).seller.all()
-        #     products = customer
+        if product_customer is not None:
+            customer = Customer.objects.get(user=request.auth.user).seller.all()
+            products = customer
 
         serializer = ProductSerializer(products, many=True, context={'request': request})
 
