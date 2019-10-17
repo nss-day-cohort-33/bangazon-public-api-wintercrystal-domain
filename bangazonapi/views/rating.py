@@ -70,11 +70,6 @@ class Ratings(ViewSet):
         """
         rating = Rating.objects.all()
 
-        # Support filtering Ratings by area id
-        # name = self.request.query_params.get('name', None)
-        # if name is not None:
-        #     ProductCategories = ProductCategories.filter(name=name)
-
         serializer = RatingSerializer(
             rating, many=True, context={'request': request})
         return Response(serializer.data)
