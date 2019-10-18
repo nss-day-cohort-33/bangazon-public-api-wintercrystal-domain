@@ -11,6 +11,8 @@ from rest_framework import status
 from bangazonapi.models import Rating
 from bangazonapi.models import Customer
 from bangazonapi.models import Product
+from .product import ProductSerializer
+
 
 
 class RatingSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,6 +21,7 @@ class RatingSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    product = ProductSerializer(many=False)
     class Meta:
         model = Rating
         url = serializers.HyperlinkedIdentityField(
@@ -42,7 +45,7 @@ class Ratings(ViewSet):
         new_rating.customer = customer
         product = Product.objects.get(pk=request.data["product_id"])
         new_rating.product = product
-        new_rating.recommender = request.data["score"]
+        new_rating.score = request.data["score"]
         new_rating.save()
 
         serializer = RatingSerializer(new_rating, context={'request': request})
@@ -69,6 +72,14 @@ class Ratings(ViewSet):
             Response -- JSON serialized list of park Ratings
         """
         rating = Rating.objects.all()
+
+        rating_customer = self.request.query_params.get('customer', None)
+
+
+        if rating_customer is not None:
+            customer_products = Customer.objects.get(user=request.auth.user)
+            ratings = Rating.objects.filter(customer=customer_products)
+            rating = ratings
 
         serializer = RatingSerializer(
             rating, many=True, context={'request': request})

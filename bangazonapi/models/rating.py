@@ -5,7 +5,7 @@ from .product import Product
 
 class Rating(models.Model):
 
-    customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING,)
+    customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, related_name="customer_rating")
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="productrating")
     score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)],)
 

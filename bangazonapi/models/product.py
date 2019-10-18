@@ -25,6 +25,7 @@ class Product(SafeDeleteModel):
         sold = OrderProduct.objects.filter(product=self, order__payment_type__isnull=False)
         return sold.count()
 
+
     def new_inventory(self, num):
         inv = self.quantity - num
         return inv
