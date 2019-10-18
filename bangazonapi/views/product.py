@@ -50,6 +50,7 @@ class Products(ViewSet):
         new_product.name = request.data["name"]
         new_product.price = request.data["price"]
         new_product.description = request.data["description"]
+        new_product.customer =request.data["customer"]
         new_product.quantity = request.data["quantity"]
         new_product.created_date = request.data["created_date"]
         new_product.location = request.data["location"]
@@ -134,8 +135,8 @@ class Products(ViewSet):
 
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
-        quantity = self.request.query_params.get('quantity', None)
         product_customer = self.request.query_params.get('customer', None)
+        quantity = self.request.query_params.get('quantity', None)
         location = self.request.query_params.get('location', None)
 # Location param is for home page search bar, which is querying location properties on prodcuts and sending back matching products
 # location__iexact is filtering by location string regardless of case
@@ -145,13 +146,14 @@ class Products(ViewSet):
         if category is not None:
             products = products.filter(product_category__id=category, quantity__gte=1)
 
+        if product_customer is not None:
+            customer_products = Customer.objects.get(user=request.auth.user).seller.all()
+            products = customer_products
+
         if quantity is not None:
             quantity = int(quantity)
             products = products.filter(quantity__gte=1).order_by("-created_date")[:quantity]
 
-        if product_customer is not None:
-            customer_products = Customer.objects.get(user=request.auth.user).seller.all()
-            products = customer_products
 
         serializer = ProductSerializer(products, many=True, context={'request': request})
 
