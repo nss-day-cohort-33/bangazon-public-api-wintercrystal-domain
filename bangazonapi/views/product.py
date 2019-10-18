@@ -11,6 +11,7 @@ from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
 from bangazonapi.models import OrderProduct
 from bangazonapi.models import Order
+from .customer import CustomerSerializer
 
 
 # Author: Danny Barker
@@ -24,6 +25,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    customer = CustomerSerializer(many=False)
     class Meta:
         model = Product
         url = serializers.HyperlinkedIdentityField(
