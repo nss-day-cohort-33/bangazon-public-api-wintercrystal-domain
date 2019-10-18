@@ -25,3 +25,5 @@ Now that your database is set up all you have to do is run the command:
 
 
 You can test your new server out in postman if you so desire.
+
+Client repo: https://github.com/nss-day-cohort-33/bangazon-client-application-wintercrystal-domain
