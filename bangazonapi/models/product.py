@@ -11,7 +11,7 @@ class Product(SafeDeleteModel):
 
     _safedelete_policy = SOFT_DELETE
     name = models.CharField(max_length=50,)
-    customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, related_name="seller")
+    customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, related_name="products")
     price = models.FloatField(validators=[MinValueValidator(0.00), MaxValueValidator(10000.00)],)
     description = models.CharField(max_length=255,)
     quantity = models.IntegerField(validators=[MinValueValidator(0)],)
@@ -24,6 +24,20 @@ class Product(SafeDeleteModel):
     def number_sold(self):
         sold = OrderProduct.objects.filter(product=self, order__payment_type__isnull=False)
         return sold.count()
+
+    @property
+    def avg_rating(self):
+        ratings =self.productrating.all()
+        total_score = 0
+        if len(ratings) > 0:
+            for score in ratings:
+                total_score += score.score
+            total_score = +total_score/len(ratings)
+        else:
+            total_score = None
+
+
+        return total_score
 
 
     def new_inventory(self, num):

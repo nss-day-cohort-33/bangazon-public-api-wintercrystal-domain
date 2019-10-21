@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Customer
 from django.contrib.auth.models import User
+from .user import UserSerializer
 
 
 

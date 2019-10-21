@@ -11,6 +11,7 @@ from bangazonapi.models import Customer
 from bangazonapi.models import ProductCategory
 from bangazonapi.models import OrderProduct
 from bangazonapi.models import Order
+from .customer import CustomerSerializer
 
 
 # Author: Danny Barker
@@ -24,13 +25,14 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    customer = CustomerSerializer(many=False)
     class Meta:
         model = Product
         url = serializers.HyperlinkedIdentityField(
             view_name='product',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'price', 'description', 'quantity', 'created_date', 'location', 'number_sold', 'customer', 'image', 'product_category')
+        fields = ('id', 'url', 'name', 'price', 'description', 'quantity', 'created_date', 'location', 'number_sold', 'customer', 'image', 'product_category', 'avg_rating')
         depth = 2
 
 
@@ -84,6 +86,17 @@ class Products(ViewSet):
         """
         product = Product.objects.get(pk=pk)
         product.quantity = request.data["quantity"]
+        product.created_date = request.data["created_date"]
+        product.location = request.data["location"]
+
+        customer = Customer.objects.get(user=request.auth.user)
+        product.customer = customer
+
+        # image = Image.objects.get(pk=request.data["image_id"])
+        # product.image = image
+
+        product_category = ProductCategory.objects.get(pk=request.data["product_category_id"])
+        product.product_category = product_category
         product.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -120,8 +133,8 @@ class Products(ViewSet):
 
         # Support filtering attractions by area id
         category = self.request.query_params.get('category', None)
-        quantity = self.request.query_params.get('quantity', None)
         product_customer = self.request.query_params.get('customer', None)
+        quantity = self.request.query_params.get('quantity', None)
         location = self.request.query_params.get('location', None)
 # Location param is for home page search bar, which is querying location properties on prodcuts and sending back matching products
 # location__iexact is filtering by location string regardless of case
@@ -131,13 +144,14 @@ class Products(ViewSet):
         if category is not None:
             products = products.filter(product_category__id=category, quantity__gte=1)
 
+        if product_customer is not None:
+            customer_products = Customer.objects.get(user=request.auth.user).products.all()
+            products = customer_products
+
         if quantity is not None:
             quantity = int(quantity)
             products = products.filter(quantity__gte=1).order_by("-created_date")[:quantity]
 
-        if product_customer is not None:
-            customer_products = Customer.objects.get(user=request.auth.user).seller.all()
-            products = customer_products
 
         serializer = ProductSerializer(products, many=True, context={'request': request})
 

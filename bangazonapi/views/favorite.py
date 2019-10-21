@@ -1,16 +1,40 @@
-"""
-   Author: Mary West
-   Methods: GET, POST
-"""
-
-"""View module for handling requests about park areas"""
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Customer, Favorite
+from .customer import CustomerSerializer
+from .product import ProductSerializer
 
+
+
+
+
+class FavoriteCustomerSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for customers
+    Author: Dustin Hobson
+
+    Arguments:
+        serializers
+    """
+    products = ProductSerializer(many=True)
+    class Meta:
+        model = Customer
+        url = serializers.HyperlinkedIdentityField(
+            view_name='customer',
+            lookup_field = 'id'
+
+        )
+        fields = ('id', 'products', 'user')
+        depth = 1
+
+"""
+   Author: Mary West
+   Methods: GET, POST
+"""
+
+"""View module for handling requests about park areas"""
 
 class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for park areas
@@ -18,13 +42,14 @@ class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    seller = FavoriteCustomerSerializer(many=False)
     class Meta:
         model = Favorite
         url = serializers.HyperlinkedIdentityField(
             view_name='favorite',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'customer', 'seller')
+        fields = ('id', 'url', 'seller')
         depth = 2
 
 class Favorites(ViewSet):
@@ -39,8 +64,9 @@ class Favorites(ViewSet):
         new_favorite = Favorite()
         customer = Customer.objects.get(user=request.auth.user)
         new_favorite.customer = customer
+
         seller = Customer.objects.get(pk=request.data["seller_id"])
-        new_favorite.customer = seller
+        new_favorite.seller = seller
         new_favorite.save()
 
         serializer = FavoriteSerializer(new_favorite, context={'request': request})
@@ -67,8 +93,9 @@ class Favorites(ViewSet):
         Returns:
             Response -- JSON serialized list of park Ratings
         """
-        favorite = Favorite.objects.all()
+        customer = Customer.objects.get(user=request.auth.user)
+        sellers_i_love = Favorite.objects.filter(customer=customer)
 
         serializer = FavoriteSerializer(
-            favorite, many=True, context={'request': request})
+            sellers_i_love, many=True, context={'request': request})
         return Response(serializer.data)
