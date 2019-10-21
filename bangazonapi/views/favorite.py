@@ -6,6 +6,26 @@ from rest_framework import status
 from bangazonapi.models import Customer, Favorite
 from .customer import CustomerSerializer
 
+
+
+
+class FavoriteCustomerSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for customers
+    Author: Dustin Hobson
+
+    Arguments:
+        serializers
+    """
+    class Meta:
+        model = Customer
+        url = serializers.HyperlinkedIdentityField(
+            view_name='customer',
+            lookup_field = 'id'
+
+        )
+        fields = ('id', 'products', 'user')
+        depth = 1
+
 """
    Author: Mary West
    Methods: GET, POST
@@ -19,15 +39,14 @@ class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
-    customer = CustomerSerializer(many=False)
-    seller = CustomerSerializer(many=False)
+    seller = FavoriteCustomerSerializer(many=False)
     class Meta:
         model = Favorite
         url = serializers.HyperlinkedIdentityField(
             view_name='favorite',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'customer', 'seller')
+        fields = ('id', 'url', 'seller')
         depth = 2
 
 class Favorites(ViewSet):
