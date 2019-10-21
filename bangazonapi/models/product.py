@@ -25,6 +25,20 @@ class Product(SafeDeleteModel):
         sold = OrderProduct.objects.filter(product=self, order__payment_type__isnull=False)
         return sold.count()
 
+    @property
+    def avg_rating(self):
+        ratings =self.productrating.all()
+        total_score = 0
+        if len(ratings) > 0:
+            for score in ratings:
+                total_score += score.score
+            total_score = +total_score/len(ratings)
+        else:
+            total_score = None
+
+
+        return total_score
+
 
     def new_inventory(self, num):
         inv = self.quantity - num
