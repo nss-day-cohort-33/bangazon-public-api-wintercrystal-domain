@@ -26,7 +26,6 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         serializers
     """
     customer = CustomerSerializer(many=False)
-
     class Meta:
         model = Product
         url = serializers.HyperlinkedIdentityField(

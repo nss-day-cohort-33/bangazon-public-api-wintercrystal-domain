@@ -25,7 +25,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field = 'id'
 
         )
-        fields = ('id', 'url', 'user', 'phone_number', 'address')
+        fields = ('id', 'url', 'user', 'phone_number', 'address', 'avg_rating')
         depth = 1
 
 
@@ -101,6 +101,8 @@ class Customers(ViewSet):
             Response -- JSON serialized list of park areas
         """
         customers = Customer.objects.all()
+        people = list(customers)
         serializer = CustomerSerializer(
             customers, many=True, context={'request': request})
+
         return Response(serializer.data)
