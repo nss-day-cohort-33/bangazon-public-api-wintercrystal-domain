@@ -70,6 +70,11 @@ class Recommendations(ViewSet):
             Response -- JSON serialized list of park Recommendations
         """
         recommendation = Recommendation.objects.all()
+        user = self.request.query_params.get('user', None)
+
+        if user is not None:
+            customer = Customer.objects.get(user=request.auth.user)
+            recommendation = recommendation.filter(customer=customer)
 
         serializer = RecommendationSerializer(
             recommendation, many=True, context={'request': request})
