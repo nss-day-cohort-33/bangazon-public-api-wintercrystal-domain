@@ -146,7 +146,7 @@ class Products(ViewSet):
             products = products.filter(product_category__id=category, quantity__gte=1)
 
         if product_customer is not None:
-            customer_products = Customer.objects.get(user=request.auth.user).seller.all()
+            customer_products = Customer.objects.get(user=request.auth.user).products.all()
             products = customer_products
 
         if quantity is not None:

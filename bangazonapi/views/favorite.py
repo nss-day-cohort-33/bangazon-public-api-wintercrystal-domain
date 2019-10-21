@@ -5,6 +5,8 @@ from rest_framework import serializers
 from rest_framework import status
 from bangazonapi.models import Customer, Favorite
 from .customer import CustomerSerializer
+from .product import ProductSerializer
+
 
 
 
@@ -16,6 +18,7 @@ class FavoriteCustomerSerializer(serializers.HyperlinkedModelSerializer):
     Arguments:
         serializers
     """
+    products = ProductSerializer(many=True)
     class Meta:
         model = Customer
         url = serializers.HyperlinkedIdentityField(
