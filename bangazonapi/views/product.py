@@ -49,7 +49,6 @@ class Products(ViewSet):
         new_product.name = request.data["name"]
         new_product.price = request.data["price"]
         new_product.description = request.data["description"]
-        new_product.customer =request.data["customer"]
         new_product.quantity = request.data["quantity"]
         new_product.created_date = request.data["created_date"]
         new_product.location = request.data["location"]
