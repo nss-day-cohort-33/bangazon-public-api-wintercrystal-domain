@@ -23,6 +23,10 @@ class Customer(models.Model):
 
         return total_score
 
+    @property
+    def full_name(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+
 
     class Meta:
         verbose_name = ("customer")
