@@ -4,7 +4,8 @@ There are a couple steps to run this server. After you clone the repo, cd into i
 2. Next, in cmd cd into the bangazon-api-env directory within the project directory
 3. Then cd into the Scripts directory and run the command: ```Start activate.bat```
 4. In the rood directory run the command: ```pip install django autopep8 pylint djangorestframework django-cors-headers pylint-django```
-5. Run: ```pip freeze -r requirements.txt```
+5. Run: ```pip install -r requirments.txt```
+6. Run: ```pip freeze -r requirements.txt```
 
 
 The next steps are for setting up the database:
